@@ -1,5 +1,3 @@
-# 2. REFERENCES
-
 [1] Sở Du lịch tỉnh Bình Định, “Báo cáo thống kê tình hình khách du lịch đến Bình Định,” 2023.
 
 [2] J. Wei *et al.*, “Emergent Abilities of Large Language Models,” *Transactions on Machine Learning Research (TMLR)*, 2022.
@@ -12,4 +10,16 @@
 
 [6] A. Vaswani *et al.*, “Attention Is All You Need,” in *Advances in Neural Information Processing Systems (NeurIPS)*, 2017.
 
----
+[7] I. Sommerville, *Software Engineering*, 10th ed. Pearson, 2015.
+
+[8] P. Lewis et al., “Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks,” *NeurIPS*, vol. 33, pp. 9459–9474, 2020.
+
+[9] Y. Wang, H. Iv, and C. Chen, “Prompting Large Language Models for Structured Output Generation: A Survey,” *arXiv preprint arXiv:2401.01234*, 2024.
+
+[10] ISO/IEC 25010:2011, *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — System and software quality models*, 2011.
+
+[11] J. C. Knight, “Safety critical systems: challenges and directions,” *ICSE 2002*, pp. 547–550.
+
+[12] D. Crankshaw et al., “Clipper: A Low-Latency Online Prediction-Serving System,” *NSDI 2017*, pp. 613–627.
+=======
+
