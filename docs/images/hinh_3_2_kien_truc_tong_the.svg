@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <style>
+    .title { font: 700 28px Arial, sans-serif; fill: #0B4F6C; }
+    .layer { fill:#F3F8FB; stroke:#0B4F6C; stroke-width:2; rx:14; ry:14; }
+    .box { fill:#E7F3FA; stroke:#0B4F6C; stroke-width:2; rx:10; ry:10; }
+    .txt { font: 600 17px Arial, sans-serif; fill:#0B4F6C; }
+    .small { font: 500 14px Arial, sans-serif; fill:#173B4D; }
+    .arrow { stroke:#0B4F6C; stroke-width:2; marker-end:url(#m); }
+  </style>
+  <defs>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#0B4F6C"/>
+    </marker>
+  </defs>
+
+  <text x="700" y="45" text-anchor="middle" class="title">Hình 3.2. Kiến trúc tổng thể 3 tầng của hệ thống Multi-Agent</text>
+
+  <!-- Presentation -->
+  <rect x="60" y="90" width="1280" height="150" class="layer"/>
+  <text x="90" y="120" class="txt">Presentation Layer</text>
+  <rect x="180" y="135" width="340" height="75" class="box"/>
+  <text x="350" y="165" text-anchor="middle" class="txt">Streamlit (app.py)</text>
+  <text x="350" y="188" text-anchor="middle" class="small">Chat UI • Session State • POST /api/chat</text>
+
+  <!-- Application -->
+  <rect x="60" y="270" width="1280" height="300" class="layer"/>
+  <text x="90" y="300" class="txt">Application Layer</text>
+
+  <rect x="120" y="320" width="260" height="90" class="box"/>
+  <text x="250" y="355" text-anchor="middle" class="txt">FastAPI (main.py)</text>
+  <text x="250" y="378" text-anchor="middle" class="small">/api/chat • get_context() • get_response()</text>
+
+  <rect x="430" y="320" width="300" height="90" class="box"/>
+  <text x="580" y="355" text-anchor="middle" class="txt">Orchestrator Agent</text>
+  <text x="580" y="378" text-anchor="middle" class="small">Intent Classification • JSON Routing</text>
+
+  <rect x="780" y="320" width="260" height="90" class="box"/>
+  <text x="910" y="355" text-anchor="middle" class="txt">Tool Layer</text>
+  <text x="910" y="378" text-anchor="middle" class="small">Food • Restaurant • Destination • Hotel • Service • Weather</text>
+
+  <rect x="1090" y="320" width="210" height="90" class="box"/>
+  <text x="1195" y="355" text-anchor="middle" class="txt">Agent Response</text>
+  <text x="1195" y="378" text-anchor="middle" class="small">Response Agent / Planning Agent</text>
+
+  <rect x="500" y="445" width="420" height="95" class="box"/>
+  <text x="710" y="478" text-anchor="middle" class="txt">LLM Runtime</text>
+  <text x="710" y="503" text-anchor="middle" class="small">Qwen/Qwen2.5-7B-Instruct:together via HuggingFace Router</text>
+
+  <!-- Data -->
+  <rect x="60" y="600" width="1280" height="120" class="layer"/>
+  <text x="90" y="630" class="txt">Data Layer</text>
+  <rect x="220" y="645" width="430" height="55" class="box"/>
+  <text x="435" y="679" text-anchor="middle" class="txt">PostgreSQL (BinhDinh_TourGuide): food, restaurant, destination, hotel, service</text>
+  <rect x="760" y="645" width="390" height="55" class="box"/>
+  <text x="955" y="679" text-anchor="middle" class="txt">External API: Open-Meteo (current weather by GPS)</text>
+
+  <!-- arrows -->
+  <line x1="350" y1="210" x2="250" y2="315" class="arrow"/>
+  <line x1="380" y1="172" x2="570" y2="315" class="arrow"/>
+  <line x1="380" y1="172" x2="905" y2="315" class="arrow"/>
+  <line x1="250" y1="410" x2="580" y2="410" class="arrow"/>
+  <line x1="730" y1="365" x2="775" y2="365" class="arrow"/>
+  <line x1="1040" y1="365" x2="1085" y2="365" class="arrow"/>
+  <line x1="910" y1="410" x2="830" y2="642" class="arrow"/>
+  <line x1="620" y1="410" x2="520" y2="642" class="arrow"/>
+</svg>
