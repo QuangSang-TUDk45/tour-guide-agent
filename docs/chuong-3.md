@@ -276,12 +276,8 @@ Ràng buộc này đảm bảo tính chính xác của thông tin và duy trì t
 
 ---
 
-> Nguồn tham khảo của chương này được quản lý tập trung tại file `docs/REFERENCES`.
-
 
 ## 3.2 Thiết kế kiến trúc tổng thể
-
-### 3.2.0 Mục tiêu mục 3.2
 
 Mục này trình bày kiến trúc tổng thể của hệ thống Trợ lý Du lịch Ảo Quy Nhơn – Bình Định, bao gồm:
 
@@ -509,7 +505,8 @@ tour-guide-agent/
 │
 ├── prompts/
 │   ├── orchestrator_agent.txt
-│   └── ...
+│   ├── planning_agent.txt
+│   └── response_agent.txt
 │
 ├── script_init_database/
 │   ├── create_database.py
@@ -517,8 +514,7 @@ tour-guide-agent/
 │
 ├── main.py
 ├── app.py
-├── requirements.txt
-└── .env
+└── requirements.txt
 ```
 
 Việc tách thư mục `prompts/` khỏi mã nguồn giúp hỗ trợ hot-swapping prompt mà không làm thay đổi logic lõi.
@@ -531,25 +527,7 @@ Cấu trúc này bảo đảm:
 
 ---
 
-## 3.2.5 Tóm tắt mục 3.2
-
-Mục 3.2 đã:
-
-* Trình bày kiến trúc 3 tầng của hệ thống.
-* Phân tích luồng dữ liệu từ frontend đến LLM.
-* Giải thích pipeline hai giai đoạn theo mô hình RAG.
-* Mô tả cấu trúc tổ chức mã nguồn hỗ trợ mở rộng.
-
-Kiến trúc đề xuất đảm bảo tính xác định trong định tuyến, giảm thiểu hallucination và hỗ trợ triển khai thực tế trong môi trường dữ liệu địa phương.
-
----
-
-> Nguồn tham khảo của mục này được quản lý tập trung tại file `docs/REFERENCES`.
-
-
 ## 3.3 Thiết kế chi tiết các Agent
-
-### 3.3.0 Mục tiêu mục 3.3
 
 Mục này trình bày thiết kế chi tiết của ba tác tử (Agents) trong hệ thống Trợ lý Du lịch Quy Nhơn – Bình Định, bao gồm:
 
@@ -784,18 +762,4 @@ Thiết kế này đảm bảo tuân thủ Single Responsibility Principle và g
 Cơ chế này tương đồng với các framework multi-agent hiện đại như AutoGen [24].
 
 ---
-
-## 3.3.5 Tóm tắt mục 3.3
-
-Mục 3.3 đã:
-
-* Trình bày thiết kế Orchestrator với schema kiểm chứng chặt chẽ.
-* Phân tích cơ chế giảm hallucination trong Response Agent.
-* Làm rõ cách Planning Agent sinh lịch trình có cấu trúc.
-* Giải thích cơ chế định tuyến động dựa trên `planning_flag`.
-
-Kiến trúc đa tác tử này đảm bảo tính xác định trong định tuyến, tính trung thực dữ liệu và khả năng mở rộng hệ thống.
-
----
-
 > Nguồn tham khảo của mục này được quản lý tập trung tại file `docs/REFERENCES`.

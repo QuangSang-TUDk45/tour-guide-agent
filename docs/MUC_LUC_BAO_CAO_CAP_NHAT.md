@@ -189,7 +189,7 @@ Trước khi vào mục lục, đây là toàn bộ stack công nghệ **thực 
 - 3.7.3 Thiết kế dữ liệu 5 bảng và scripts ETL.
 
 ### 3.8 Vấn đề dữ liệu địa chỉ hành chính sau sáp nhập 2025 *(~4 trang)*
-- 3.8.1 Mốc thời gian triển khai đề tài (23/07/2025) và hiện trạng dữ liệu nguồn ban đầu.
+- 3.8.1 Mốc thời gian triển khai đề tài (22/09/2025) và hiện trạng dữ liệu nguồn ban đầu.
 - 3.8.2 Thực tế dữ liệu địa chỉ trên Google Maps vẫn mang đơn vị hành chính cũ tại nhiều điểm.
 - 3.8.3 Rủi ro sai lệch khi đối chiếu địa chỉ cũ/mới trong truy vấn và hiển thị kết quả.
 - 3.8.4 Quy trình chuẩn hoá thủ công: tra cứu GG Maps + đối chiếu văn bản pháp lý/nguồn tra cứu sáp nhập.
