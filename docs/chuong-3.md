@@ -527,4 +527,239 @@ Cấu trúc này bảo đảm:
 
 ---
 
+## 3.3 Thiết kế chi tiết các Agent
+
+Mục này trình bày thiết kế chi tiết của ba tác tử (Agents) trong hệ thống Trợ lý Du lịch Quy Nhơn – Bình Định, bao gồm:
+
+* Cơ chế phân loại và định tuyến ý định (Intent Routing).
+* Thiết kế sinh phản hồi có kiểm soát dựa trên ngữ cảnh.
+* Cơ chế lập lịch trình đa ngày có cấu trúc.
+* Phương pháp định tuyến động dựa trên cờ trạng thái.
+
+Thiết kế Agent tuân theo mô hình LLM-based Agent Architecture, trong đó hành vi của tác tử được xác định bởi System Prompt và cơ chế kiểm chứng đầu ra [21], [24].
+
+---
+
+![Hình 3.3 - Thiết kế chi tiết 3 Agent và cơ chế định tuyến động](images/hinh_3_3_thiet_ke_agents.svg)
+
+## 3.3.1 Orchestrator Agent: Phân loại intent và trích xuất tham số
+
+Orchestrator Agent là lớp điều phối trung tâm, chịu trách nhiệm:
+
+* Phân loại truy vấn người dùng vào đúng 1 trong 8 intents.
+* Trích xuất tham số cấu trúc.
+* Trả về JSON hợp lệ.
+* Tuyệt đối không sinh câu trả lời hội thoại.
+
+Thiết kế này phù hợp với xu hướng sử dụng LLM cho Structured Output Generation và API Routing [21].
+
+---
+
+### (1) Thiết kế Schema và Validation
+
+Đầu ra của Orchestrator được định nghĩa và kiểm chuẩn nghiêm ngặt bằng thư viện `Pydantic`.
+
+Schema gốc (`OrchestratorOutput`) bao gồm 8 trường tương ứng với 8 intent.
+
+Cơ chế “Exactly-One-Key Constraint” được hiện thực trong phương thức `model_post_init()`.
+
+Nếu số khóa ≠ 1:
+
+* Hệ thống ném `ValueError`.
+* Kích hoạt retry loop.
+
+Thiết kế này đảm bảo tính xác định (deterministic routing) và tránh lỗi multi-intent ambiguity – vấn đề thường gặp trong hệ đa tác tử [19], [24].
+
+---
+
+### (2) Thiết kế Prompt và Few-shot Control
+
+System prompt (`orchestrator_agent.txt`) bao gồm:
+
+* 16 ví dụ few-shot.
+* Quy tắc xuất JSON thuần (không markdown).
+* Chuẩn hóa giá tiền (“dưới 1 triệu” → `1000000`).
+* Giữ nguyên tên địa danh.
+
+Việc sử dụng few-shot learning để hướng dẫn cấu trúc đầu ra đã được chứng minh giúp cải thiện độ ổn định của LLM trong bài toán structured extraction [21].
+
+---
+
+### (3) Cơ chế Tự sửa lỗi (Self-Correction Loop)
+
+Hàm `get_routing_from_orchestrator()`:
+
+* Thiết lập `max_retries = 1`.
+* Nếu LLM sinh JSON sai cấu trúc:
+
+  * Pydantic sinh `ValidationError`.
+  * Thông báo lỗi được dịch sang tiếng Việt.
+  * Gắn trực tiếp vào prompt lần gọi thứ hai.
+
+Cơ chế này tương đồng với phương pháp self-refinement trong hệ thống LLM Agent hiện đại [24].
+
+---
+
+### (4) Giải quyết xung đột đa ý định
+
+Nếu câu hỏi chứa nhiều ý định (VD: “Gợi ý khách sạn và lên lịch 3 ngày”):
+
+* Prompt ép LLM chọn intent cấp cao hơn (`planning`).
+* Các yêu cầu phụ được gom vào trường `prefer`.
+
+Chiến lược này giúp tránh vòng lặp agent chồng chéo – một vấn đề đã được ghi nhận trong các hệ multi-agent không kiểm soát tốt [19].
+
+---
+
+## 3.3.2 Response Agent: Sinh phản hồi chung từ Context
+
+Response Agent xử lý 7/8 intents (ngoại trừ `planning`).
+
+Thiết kế tập trung vào hai nguyên lý:
+
+* Data-grounded generation.
+* Hallucination mitigation.
+
+Hiện tượng “ảo giác” của LLM đã được khảo sát rộng rãi trong các nghiên cứu gần đây [22].
+
+---
+
+### (1) Tiêm ngữ cảnh (Context Injection)
+
+Backend ghép dữ liệu truy xuất vào cuối prompt dưới nhãn:
+
+```
+[DỮ LIỆU RAG & TOOLS]
+```
+
+Agent được yêu cầu:
+
+* Chỉ sử dụng dữ liệu trong khối này.
+* Không được suy diễn ngoài phạm vi cung cấp.
+
+Cách tiếp cận này thuộc mô hình Retrieval-Augmented Generation (RAG) [20].
+
+---
+
+### (2) Thiết kế Prompt và Hành vi hội thoại
+
+System prompt định hình Agent như:
+
+* Hướng dẫn viên du lịch ảo.
+* Giọng văn thân thiện.
+* Có thể dùng emoji (📍, 🍽, 🏨).
+
+Nếu không có dữ liệu → từ chối lịch sự.
+
+Việc định hướng vai trò (role conditioning) giúp tăng tính nhất quán đầu ra của LLM [21].
+
+---
+
+### (3) Kiểm soát hallucination
+
+Cơ chế giảm ảo giác gồm:
+
+* Tách biệt truy xuất và sinh văn bản.
+* Không cung cấp internet tự do cho LLM.
+* Giới hạn domain nội bộ.
+
+Chiến lược này phù hợp với khuyến nghị giảm hallucination trong các hệ foundation model [22].
+
+---
+
+## 3.3.3 Planning Agent: Sinh lịch trình có cấu trúc
+
+Planning Agent là một tác tử chuyên biệt (Specialized Agent), chỉ được kích hoạt khi intent là `planning`.
+
+Đây là bài toán đòi hỏi:
+
+* Suy luận theo thời gian.
+* Tối ưu chi phí.
+* Phân bổ không gian hợp lý.
+
+Các nghiên cứu gần đây chỉ ra rằng khả năng planning của LLM vẫn còn hạn chế và cần cấu trúc hướng dẫn rõ ràng [23].
+
+---
+
+### (1) Multi-Tool Context Assembly
+
+Planning Agent nhận “Super-context” được tổng hợp từ:
+
+* get_destination
+* get_restaurant
+* get_food_list
+* get_hotel
+
+Khối dữ liệu được chèn dưới nhãn:
+
+```
+[NGUYÊN LIỆU GỢI Ý]
+```
+
+Việc cung cấp ngữ cảnh đầy đủ giúp cải thiện độ nhất quán kế hoạch, phù hợp với khuyến nghị từ các nghiên cứu về planning trong LLM [23].
+
+---
+
+### (2) Cấu trúc đầu ra bắt buộc
+
+Prompt yêu cầu cấu trúc 4 phần:
+
+1. Mở đầu
+2. Lịch trình theo ngày/buổi
+3. Bảng chi phí (Markdown table)
+4. Kết luận
+
+Việc ép cấu trúc giúp tăng độ ổn định đầu ra và hỗ trợ kiểm chứng hậu xử lý (post-processing validation) [21].
+
+---
+
+### (3) Nguyên tắc “Tuyệt đối trung thực”
+
+Agent chỉ được phép sử dụng địa danh xuất hiện trong “nguyên liệu”.
+
+Nếu thiếu dữ liệu → không được bịa.
+
+Chiến lược này trực tiếp giảm hallucination trong bài toán planning domain-specific [22], [23].
+
+---
+
+## 3.3.4 Cơ chế chọn agent theo cờ `planning_flag`
+
+Hệ thống áp dụng Dynamic Agent Routing dựa trên cờ trạng thái [24].
+
+---
+
+### (1) Thiết lập cờ hiệu
+
+Trong `get_context()`:
+
+* Nếu intent = planning
+  → gán `planning_flag = True`
+* Ngược lại
+  → `False`
+
+Đồng thời tự điền tham số mặc định nếu thiếu.
+
+---
+
+### (2) Thực thi điều kiện
+
+Trong `get_response()`:
+
+* `planning_flag == False` → `get_agent_response()`
+* `planning_flag == True` → `get_planning_agent_response()`
+
+Thiết kế này đảm bảo tuân thủ Single Responsibility Principle và giảm chi phí token.
+
+---
+
+### (3) Lợi ích kiến trúc
+
+* Gọi đúng chuyên gia cho đúng nhiệm vụ.
+* Tránh gửi prompt lập lịch trình cho câu hỏi đơn giản.
+* Dễ mở rộng thêm Agent mới.
+
+Cơ chế này tương đồng với các framework multi-agent hiện đại như AutoGen [24].
+
+---
 > Nguồn tham khảo của mục này được quản lý tập trung tại file `docs/REFERENCES`.

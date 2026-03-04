@@ -41,3 +41,12 @@
 [19] Z. Chen et al., “Multi-Agent System Architectures for Complex Query Resolution: A Survey,” *IEEE Transactions on Knowledge and Data Engineering*, vol. 36, no. 4, pp. 1542–1560, 2024.
 
 [20] S. Gao et al., “A Modular Pipeline for Retrieval-Augmented Generation in Specialized Domains,” trong *Proc. IEEE International Conference on Data Mining (ICDM)*, 2023, pp. 88–97.
+
+
+[21] Y. Zheng et al., “Instructed LLM Agents for Structured Output Generation and API Routing,” *IEEE Access*, vol. 12, pp. 34512-34525, 2024.
+
+[22] S. Ji, T. Yu, and E. Cambria, “A Survey of Hallucination in Large Foundation Models,” *ACM Computing Surveys*, vol. 56, no. 1, pp. 1-35, 2024.
+
+[23] K. Valmeekam et al., “On the Planning Abilities of Large Language Models: A Critical Investigation,” trong *Advances in Neural Information Processing Systems (NeurIPS)*, 2023.
+
+[24] Q. Wu et al., “AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation,” *arXiv preprint arXiv:2308.08155*, 2023.
