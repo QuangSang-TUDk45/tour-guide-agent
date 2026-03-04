@@ -70,8 +70,8 @@ Trước khi vào mục lục, đây là toàn bộ stack công nghệ **thực 
 ## CHƯƠNG 1: TỔNG QUAN VỀ ĐỀ TÀI *(~14 trang)*
 
 **1.1 Bối cảnh nghiên cứu** ✓  
-> - 1.1.1 Xu hướng ứng dụng AI trong ngành du lịch.
-> - 1.1.2 Tiềm năng phát triển du lịch Quy Nhơn – Bình Định.
+> - 1.1.1 Tiềm năng phát triển du lịch Quy Nhơn – Bình Định.
+> - 1.1.2 Xu hướng ứng dụng AI trong ngành du lịch.
 > - 1.1.3 Thách thức cung cấp thông tin địa phương đa domain.
 
 **1.2 Tổng quan các hệ thống AI hỗ trợ du lịch hiện có** ✓  
