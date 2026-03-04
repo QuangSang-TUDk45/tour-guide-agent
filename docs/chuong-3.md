@@ -200,4 +200,80 @@ Không được chứa free-text ngoài JSON — yêu cầu này dựa trên ngu
 ---
 
 
+# 3.1.2 Yêu cầu phi chức năng
 
+Theo tiêu chuẩn ISO/IEC 25010 [10], các yêu cầu phi chức năng mô tả các thuộc tính chất lượng mà hệ thống phải đảm bảo bên cạnh tính đúng đắn chức năng.
+
+---
+
+**Thời gian phản hồi (Latency / Performance Efficiency).**
+
+Do LLM sinh văn bản theo cơ chế tự hồi quy (auto-regressive generation), mỗi token được tạo ra tuần tự theo phân phối xác suất:
+
+[
+P(w_t \mid w_{<t})
+]
+
+Quá trình này khiến thời gian suy luận dài hơn so với API truyền thống. Do đó, hệ thống thiết lập ngưỡng thời gian phản hồi tối đa là **60 giây** cho toàn bộ chu trình từ lúc người dùng gửi yêu cầu đến khi hiển thị kết quả trên giao diện. Giới hạn này nhằm đảm bảo trải nghiệm người dùng theo khuyến nghị về tương tác người–AI [7].
+
+---
+
+**Tính xác định trong phân loại ý định (Determinism & Reliability).**
+
+LLM vốn hoạt động theo cơ chế xác suất, do đó đầu ra mang tính ngẫu nhiên (stochastic). Tuy nhiên, nghiệp vụ định tuyến của hệ thống yêu cầu tính tất định (deterministic routing). Vì vậy:
+
+* Orchestrator Agent phải trả về đúng một đối tượng JSON hợp lệ.
+* Chỉ chứa duy nhất một khóa cấp cao nhất (exactly-one-key constraint).
+* Không sinh thêm văn bản tự do.
+
+Yêu cầu này nhằm đảm bảo quy trình phân tích cú pháp (JSON parsing) không bị lỗi và toàn bộ pipeline hoạt động ổn định.
+
+---
+
+**Khả năng xử lý lỗi mềm mại (Graceful Degradation / Fault Tolerance).**
+
+Trong kiến trúc phụ thuộc Cloud API, các lỗi như:
+
+* Mất kết nối mạng,
+* Vượt giới hạn API (rate limit),
+* Lỗi máy chủ (HTTP 500),
+
+là điều không thể tránh khỏi. Theo Knight [11], hệ thống phần mềm phải đảm bảo cơ chế xử lý lỗi an toàn, đặc biệt khi tích hợp thành phần bên ngoài. Do đó, hệ thống phải:
+
+* Bắt ngoại lệ tại tầng Backend.
+* Không để lộ stack-trace kỹ thuật ra giao diện người dùng.
+* Trả về thông báo xin lỗi thân thiện và đề nghị thử lại.
+
+---
+
+
+### 3.1.3. Ràng buộc thiết kế (Design Constraints) 
+
+Ràng buộc thiết kế giới hạn không gian giải pháp kỹ thuật của hệ thống và được xác định ngay từ đầu để đảm bảo tính khả thi triển khai.
+
+---
+
+**Ràng buộc về Hạ tầng và Triển khai.**
+
+Hệ thống được thiết kế để hoạt động trong môi trường không có GPU chuyên dụng. Vì vậy:
+
+* Cấm tải trực tiếp trọng số mô hình tại máy chủ cục bộ.
+* Toàn bộ suy luận phải thông qua Cloud API (HuggingFace Inference Router).
+* Giao tiếp sử dụng giao thức HTTP chuẩn hóa theo OpenAI-compatible API.
+
+Ràng buộc này giúp giảm chi phí phần cứng và phù hợp với kiến trúc prediction-serving phân tán được đề xuất trong các hệ thống phục vụ mô hình học máy hiện đại [12].
+
+---
+
+**Ràng buộc về Không gian Dữ liệu (Data Scope Constraints).**
+
+Để ngăn chặn hiện tượng “ảo giác” (hallucination), hệ thống bị giới hạn chặt chẽ trong phạm vi địa lý Quy Nhơn – Bình Định. Điều này đồng nghĩa:
+
+* Chỉ được phép sử dụng dữ liệu đã lưu trữ trong cơ sở dữ liệu nội bộ.
+* Nếu người dùng yêu cầu nội dung ngoài phạm vi (ví dụ: Đà Nẵng, Nha Trang, Đà Lạt), hệ thống phải từ chối thay vì tự động sinh nội dung dựa trên tri thức tổng quát của LLM.
+
+Ràng buộc này đảm bảo tính chính xác của thông tin và duy trì tính nhất quán của hệ thống.
+
+---
+
+> Nguồn tham khảo của chương này được quản lý tập trung tại file `docs/REFERENCES`.

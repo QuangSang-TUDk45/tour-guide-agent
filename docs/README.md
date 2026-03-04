@@ -97,3 +97,4 @@ Thư mục `docs/` hiện đã có:
 - Master TOC chi tiết theo cấu trúc 5 chương.
 - File nguồn tham khảo (`REFERENCES`).
 - Placeholder cho các chương và phụ lục để triển khai nội dung chi tiết ở các phiên tiếp theo.
+
