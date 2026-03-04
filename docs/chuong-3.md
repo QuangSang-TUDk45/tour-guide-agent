@@ -509,7 +509,8 @@ tour-guide-agent/
 │
 ├── prompts/
 │   ├── orchestrator_agent.txt
-│   └── ...
+│   ├── planning_agent.txt
+│   └── response_agent.txt
 │
 ├── script_init_database/
 │   ├── create_database.py
@@ -517,8 +518,7 @@ tour-guide-agent/
 │
 ├── main.py
 ├── app.py
-├── requirements.txt
-└── .env
+└── requirements.txt
 ```
 
 Việc tách thư mục `prompts/` khỏi mã nguồn giúp hỗ trợ hot-swapping prompt mà không làm thay đổi logic lõi.
