@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300">
+  <style>
+    .box { fill:#E7F3FA; stroke:#0B4F6C; stroke-width:2; rx:10; ry:10; }
+    .txt { font-family:Arial, sans-serif; font-size:16px; fill:#0B4F6C; font-weight:600; }
+    .title { font-family:Arial, sans-serif; font-size:22px; fill:#0B4F6C; font-weight:700; }
+    .arrow { stroke:#0B4F6C; stroke-width:2; marker-end:url(#m); }
+  </style>
+  <defs>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#0B4F6C"/>
+    </marker>
+  </defs>
+
+  <text x="600" y="35" text-anchor="middle" class="title">Hình 3.1. Luồng chức năng tổng quát cho 8 Use Case (UC)</text>
+
+  <rect class="box" x="40" y="110" width="180" height="80"/>
+  <text class="txt" x="130" y="155" text-anchor="middle">User Query</text>
+
+  <rect class="box" x="260" y="95" width="240" height="110"/>
+  <text class="txt" x="380" y="145" text-anchor="middle">Orchestrator</text>
+  <text class="txt" x="380" y="170" text-anchor="middle">(Intent + JSON)</text>
+
+  <rect class="box" x="540" y="95" width="220" height="110"/>
+  <text class="txt" x="650" y="145" text-anchor="middle">Tool Layer</text>
+  <text class="txt" x="650" y="170" text-anchor="middle">(Retrieval/API)</text>
+
+  <rect class="box" x="800" y="95" width="250" height="110"/>
+  <text class="txt" x="925" y="145" text-anchor="middle">Response / Planning</text>
+  <text class="txt" x="925" y="170" text-anchor="middle">Agent</text>
+
+  <rect class="box" x="1090" y="110" width="90" height="80"/>
+  <text class="txt" x="1135" y="155" text-anchor="middle">Output</text>
+
+  <line class="arrow" x1="220" y1="150" x2="255" y2="150"/>
+  <line class="arrow" x1="500" y1="150" x2="535" y2="150"/>
+  <line class="arrow" x1="760" y1="150" x2="795" y2="150"/>
+  <line class="arrow" x1="1050" y1="150" x2="1085" y2="150"/>
+</svg>
