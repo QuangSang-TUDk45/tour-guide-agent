@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760">
+  <style>
+    .title { font: 700 27px Arial, sans-serif; fill:#0B4F6C; }
+    .box { fill:#E7F3FA; stroke:#0B4F6C; stroke-width:2; rx:10; ry:10; }
+    .layer { fill:#F3F8FB; stroke:#0B4F6C; stroke-width:2; rx:14; ry:14; }
+    .txt { font: 600 16px Arial, sans-serif; fill:#0B4F6C; }
+    .small { font: 500 13px Arial, sans-serif; fill:#173B4D; }
+    .arrow { stroke:#0B4F6C; stroke-width:2; marker-end:url(#m); }
+  </style>
+  <defs>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#0B4F6C"/>
+    </marker>
+  </defs>
+
+  <text x="700" y="40" text-anchor="middle" class="title">Hình 3.3. Thiết kế chi tiết 3 Agent và cơ chế định tuyến động</text>
+
+  <rect x="50" y="80" width="1300" height="620" class="layer"/>
+
+  <rect x="90" y="120" width="220" height="90" class="box"/>
+  <text x="200" y="155" text-anchor="middle" class="txt">User Prompt</text>
+  <text x="200" y="178" text-anchor="middle" class="small">Streamlit -> FastAPI</text>
+
+  <rect x="360" y="95" width="300" height="140" class="box"/>
+  <text x="510" y="130" text-anchor="middle" class="txt">Orchestrator Agent</text>
+  <text x="510" y="155" text-anchor="middle" class="small">Intent Classification + Param Extraction</text>
+  <text x="510" y="178" text-anchor="middle" class="small">Pydantic Validation + Retry Loop</text>
+  <text x="510" y="201" text-anchor="middle" class="small">Exactly-One-Key JSON</text>
+
+  <rect x="730" y="95" width="300" height="140" class="box"/>
+  <text x="880" y="130" text-anchor="middle" class="txt">Tool Layer</text>
+  <text x="880" y="155" text-anchor="middle" class="small">get_food/get_restaurant/get_destination</text>
+  <text x="880" y="178" text-anchor="middle" class="small">get_hotel/get_service/get_weather</text>
+  <text x="880" y="201" text-anchor="middle" class="small">RAG Context Assembly</text>
+
+  <rect x="1090" y="95" width="220" height="140" class="box"/>
+  <text x="1200" y="130" text-anchor="middle" class="txt">Routing Flag</text>
+  <text x="1200" y="155" text-anchor="middle" class="small">planning_flag = True/False</text>
+  <text x="1200" y="178" text-anchor="middle" class="small">Dynamic Agent Selection</text>
+
+  <rect x="240" y="320" width="420" height="150" class="box"/>
+  <text x="450" y="355" text-anchor="middle" class="txt">Response Agent</text>
+  <text x="450" y="380" text-anchor="middle" class="small">Handles 7/8 intents (except planning)</text>
+  <text x="450" y="403" text-anchor="middle" class="small">[DỮ LIỆU RAG &amp; TOOLS] injection</text>
+  <text x="450" y="426" text-anchor="middle" class="small">Hallucination mitigation (data-grounded)</text>
+
+  <rect x="740" y="320" width="420" height="150" class="box"/>
+  <text x="950" y="355" text-anchor="middle" class="txt">Planning Agent</text>
+  <text x="950" y="380" text-anchor="middle" class="small">Specialized for planning intent</text>
+  <text x="950" y="403" text-anchor="middle" class="small">[NGUYÊN LIỆU GỢI Ý] super-context</text>
+  <text x="950" y="426" text-anchor="middle" class="small">Structured itinerary (4 mandatory sections)</text>
+
+  <rect x="500" y="540" width="400" height="120" class="box"/>
+  <text x="700" y="575" text-anchor="middle" class="txt">Final Response</text>
+  <text x="700" y="598" text-anchor="middle" class="small">Deterministic routing + grounded generation</text>
+  <text x="700" y="621" text-anchor="middle" class="small">Returned to Streamlit UI</text>
+
+  <line x1="310" y1="165" x2="355" y2="165" class="arrow"/>
+  <line x1="660" y1="165" x2="725" y2="165" class="arrow"/>
+  <line x1="1030" y1="165" x2="1085" y2="165" class="arrow"/>
+
+  <line x1="1200" y1="235" x2="950" y2="315" class="arrow"/>
+  <line x1="1200" y1="235" x2="450" y2="315" class="arrow"/>
+  <line x1="880" y1="235" x2="450" y2="315" class="arrow"/>
+  <line x1="880" y1="235" x2="950" y2="315" class="arrow"/>
+
+  <line x1="450" y1="470" x2="650" y2="535" class="arrow"/>
+  <line x1="950" y1="470" x2="750" y2="535" class="arrow"/>
+</svg>
