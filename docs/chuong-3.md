@@ -762,4 +762,259 @@ Thiết kế này đảm bảo tuân thủ Single Responsibility Principle và g
 Cơ chế này tương đồng với các framework multi-agent hiện đại như AutoGen [24].
 
 ---
-> Nguồn tham khảo của mục này được quản lý tập trung tại file `docs/REFERENCES`.
+
+
+
+## 3.4 Thiết kế Tool Layer
+
+Tool Layer là lớp thực thi truy xuất dữ liệu và dịch vụ ngoại vi, nằm giữa lớp điều phối (Orchestrator/Backend) và lớp sinh văn bản (Response/Planning Agent). Về mặt kiến trúc, lớp này hiện thực hoá nguyên lý tách biệt trách nhiệm (Separation of Concerns): LLM không truy cập trực tiếp nguồn dữ liệu, mà chỉ nhận ngữ cảnh đã được chuẩn hoá từ các công cụ truy xuất [27].
+
+### 3.4.1 Nguyên tắc thiết kế chung
+
+Các tool trong hệ thống được thiết kế theo cùng một chu trình 4 bước:
+
+1. **Nhận tham số đã chuẩn hoá** từ Orchestrator JSON.
+2. **Truy vấn nguồn dữ liệu** (PostgreSQL hoặc API ngoài) bằng tham số có kiểm soát.
+3. **Hậu xử lý kết quả** (DataFrame/JSON): lọc, sắp xếp, ràng buộc Top-K.
+4. **Trả dữ liệu có cấu trúc** về `get_context()` để ghép thành context string.
+
+Thiết kế này giúp giảm nhiễu ngữ cảnh, tăng khả năng debug và kiểm thử từng module độc lập.
+
+---
+
+### 3.4.2 Tool `get_food_list()`
+
+`get_food_list(type_of_food, filter_tags)` là tool truy xuất món ăn theo loại món và sở thích.
+
+**Quy tắc kỹ thuật chính:**
+
+* `type_of_food` được kiểm tra theo allowlist chuẩn hoá.
+* Truy vấn SQL dùng `text()` và `params` để tránh chèn chuỗi trực tiếp [28].
+* Điểm tương đồng tính bằng `difflib.SequenceMatcher` trên cột `tags`.
+* Kết quả lấy **Top-5** theo `sim_score`.
+
+Cách làm này kết hợp ưu điểm của dữ liệu quan hệ (lọc chính xác theo cột) và matching lexical nhẹ, phù hợp bài toán dữ liệu địa danh/ẩm thực quy mô vừa.
+
+---
+
+### 3.4.3 Tool `get_restaurant()`
+
+`get_restaurant(filter_tags)` truy xuất bảng `restaurant`, tính điểm tương đồng giữa `filter_tags` và cột `category`, sau đó trả về **Top-10**.
+
+Lý do chọn Top-10 cho nhà hàng là để tăng độ bao phủ lựa chọn (diversity) khi người dùng có thể ưu tiên nhiều tiêu chí khác nhau (giá, phong cách, vị trí).
+
+---
+
+### 3.4.4 Tool `get_destination()`
+
+`get_destination(filter_tags)` có cấu trúc tương tự restaurant nhưng chạy trên bảng `destination`.
+
+Đầu ra duy trì các trường phục vụ bài toán kế tiếp:
+
+* `name`, `address`, `description`
+* `gps_lat`, `gps_lon` (hỗ trợ weather tool)
+
+Kết quả thực thi hiện tại dùng **Top-10** theo `sim_score` để đảm bảo đủ độ bao phủ cho planning và weather mapping.
+
+---
+
+### 3.4.5 Tool `get_weather()`
+
+`get_weather(lat, lon)` gọi Open-Meteo API để lấy `current_weather` theo tọa độ GPS.
+
+Pipeline hai bước:
+
+1. Tool `get_destination(location)` lấy cặp tọa độ (`gps_lat`, `gps_lon`).
+2. Tool `get_weather()` gọi endpoint Open-Meteo và trả JSON đã chuẩn hoá.
+
+Thiết kế này giới hạn “tri thức thời gian thực” ở lớp tool, ngăn LLM tự suy diễn dữ liệu thời tiết ngoài nguồn kiểm chứng.
+
+---
+
+### 3.4.6 Tool `get_hotel()`
+
+`get_hotel(location, max_price)` xử lý truy vấn khách sạn với hai chế độ:
+
+* **Filter cứng theo giá** nếu có bản ghi thoả `price_numeric <= max_price`.
+* **Fallback gần nhất** (nearest-price) nếu tập kết quả rỗng.
+
+Sau cùng dữ liệu được sắp tăng dần theo giá và lấy **Top-5**. Đây là chiến lược cân bằng giữa tính đúng ràng buộc và tính hữu ích khi dữ liệu thực tế không có kết quả tuyệt đối khớp.
+
+---
+
+### 3.4.7 Tool `get_service()`
+
+`get_service(location, filter_tags)` chạy theo hai pha:
+
+1. Tìm `destination_id` từ bảng `destination`.
+2. Truy vấn bảng `service` theo `destination_id` và điều kiện `ILIKE` (nếu có `filter_tags`).
+
+Tool trả kết quả có trạng thái rõ ràng (`success`, `empty`, `not_found`) để Backend có thể xử lý phản hồi thân thiện thay vì lỗi kỹ thuật.
+
+---
+
+## 3.5 Thiết kế Prompt và Orchestrator JSON Schema
+
+Mục này tập trung vào thiết kế prompt điều khiển hành vi Orchestrator và schema dữ liệu trung gian giữa LLM với hệ thống.
+
+### 3.5.1 Prompt Orchestrator cho 8 intents
+
+Prompt định nghĩa rõ 8 intent hoạt động:
+
+* `food`, `restaurant`, `destination`, `planning`
+* `weather`, `hotel`, `service`, `chat`
+
+Mỗi intent có mô tả nhiệm vụ, tham số cần trích xuất, và ví dụ chuẩn đầu ra.
+
+---
+
+### 3.5.2 Quy tắc JSON-only output
+
+Prompt áp dụng ràng buộc nghiêm ngặt:
+
+* Không markdown fence.
+* Không lời chào.
+* Không đoạn giải thích.
+* Chỉ trả một JSON object hợp lệ.
+
+Ràng buộc này giúp backend parse ổn định và giảm lỗi pipeline do text ngoài lề.
+
+---
+
+### 3.5.3 16 Few-shot examples
+
+Prompt hiện có 16 ví dụ bao phủ cả các tình huống:
+
+* truy vấn đơn intent,
+* truy vấn thiếu tham số,
+* truy vấn đa ý định cần ưu tiên intent chính,
+* chuẩn hoá dữ liệu giá/địa danh.
+
+Few-shot đóng vai trò như “hợp đồng hành vi” giúp LLM nhất quán hơn ở bài toán extraction có cấu trúc [21].
+
+---
+
+### 3.5.4 Forced Single Intent
+
+Chiến lược “Forced Single Intent” buộc Orchestrator chọn duy nhất một intent nổi trội nhất. Nếu câu hỏi chứa nhiều ý, phần phụ được gom vào tham số bổ sung (đặc biệt với planning). Điều này giảm xung đột điều phối và tránh gọi nhiều tool ngoài ý muốn.
+
+---
+
+## 3.6 Thiết kế Validation Pipeline với Pydantic
+
+### 3.6.1 Leaf models
+
+Hệ thống định nghĩa 8 leaf models cho 8 intent:
+
+* `FoodModel`, `RestaurantModel`, `DestinationModel`, `PlanningModel`
+* `WeatherModel`, `HotelModel`, `ServiceModel`, `ChatModel`
+
+Mỗi model dùng type hints rõ ràng (`str`, `Optional[str]`, `Optional[int]`, `Literal[...]`) để ràng buộc dữ liệu ngay tại lớp biên.
+
+---
+
+### 3.6.2 Root model và Exactly-One-Key
+
+`OrchestratorOutput` là root schema chứa toàn bộ intent field. Hàm `model_post_init()` đếm số field khác `None`; nếu khác 1 sẽ ném lỗi. Đây là cơ chế then chốt bảo đảm tính tất định định tuyến.
+
+---
+
+### 3.6.3 Retry + Fallback
+
+Khi parse/validate thất bại:
+
+1. `ValidationError` được nối vào prompt để LLM tự sửa ở lượt kế.
+2. Nếu vượt `max_retries`, hệ thống fallback về response cuối cùng để tránh treo pipeline.
+
+Thiết kế này là một dạng “soft-fail control” thường dùng cho hệ thống phụ thuộc dịch vụ LLM bên ngoài [11].
+
+---
+
+## 3.7 Thiết kế API, Frontend và CSDL
+
+### 3.7.1 API endpoint `POST /api/chat`
+
+Backend nhận payload `ChatRequest(user_prompt: str)`, gọi tuần tự:
+
+* `get_context(user_prompt)`
+* `get_response(user_prompt, context)`
+
+Sau đó trả JSON kết quả chuẩn về client.
+
+---
+
+### 3.7.2 Frontend Streamlit
+
+Frontend triển khai theo chat interaction loop:
+
+* lưu hội thoại bằng `st.session_state.chat_history`,
+* gọi API qua `requests.post(timeout=60)`,
+* render phản hồi theo từng lượt.
+
+Thiết kế này giữ frontend mỏng, không chứa business logic, thuận tiện mở rộng backend độc lập.
+
+---
+
+### 3.7.3 Cơ sở dữ liệu và ETL scripts
+
+Data layer sử dụng PostgreSQL (mô hình quan hệ) với 5 bảng chính. Dữ liệu được nạp từ Excel qua hai script:
+
+* `create_database.py`: tạo DB và kiểm tra tồn tại.
+* `convert_excel_to_postgre.py`: ánh xạ sheet → table, đổi tên cột, nạp dữ liệu.
+
+Mô hình quan hệ phù hợp với dữ liệu cấu trúc và yêu cầu truy vấn điều kiện chặt chẽ [25], [26].
+
+---
+
+## 3.8 Vấn đề dữ liệu địa chỉ hành chính sau sáp nhập 2025
+
+### 3.8.1 Bối cảnh triển khai dữ liệu
+
+Tại thời điểm bắt đầu triển khai (22/09/2025), dữ liệu nguồn du lịch địa phương vẫn chủ yếu dùng đơn vị địa chỉ cũ trên bản đồ số và nguồn tổng hợp công cộng.
+
+---
+
+### 3.8.2 Rủi ro sai lệch địa chỉ cũ/mới
+
+Sai khác đơn vị hành chính có thể dẫn tới:
+
+* truy vấn không khớp địa danh,
+* hiển thị địa chỉ không đồng nhất giữa các nguồn,
+* giảm độ tin cậy khi người dùng kiểm chứng ngoài hệ thống.
+
+---
+
+### 3.8.3 Quy trình chuẩn hoá thủ công
+
+Nhóm triển khai áp dụng quy trình thủ công nhiều bước:
+
+1. Đối chiếu điểm trên Google Maps.
+2. Tra cứu văn bản/nguồn pháp lý về sáp nhập đơn vị hành chính.
+3. Cập nhật lại dữ liệu trong bảng đích kèm mốc thời gian.
+
+---
+
+### 3.8.4 Nguyên tắc lưu vết dữ liệu
+
+Để hỗ trợ audit về sau, dữ liệu chuẩn hoá được khuyến nghị lưu kèm:
+
+* địa chỉ gốc,
+* địa chỉ đã chuẩn hoá,
+* nguồn đối chiếu,
+* thời điểm cập nhật.
+
+---
+
+## 3.9 Tóm tắt chương
+
+Chương 3 đã hoàn thiện từ đặc tả yêu cầu đến thiết kế hệ thống ở mức triển khai:
+
+* xác định rõ Use Case và ràng buộc phi chức năng,
+* mô tả kiến trúc 3 tầng và pipeline điều phối,
+* trình bày thiết kế chi tiết 3 Agent và 6 Tools,
+* mô tả cơ chế Prompt/Validation để kiểm soát structured output,
+* làm rõ thiết kế API, frontend, data layer và vấn đề dữ liệu hành chính thực tế.
+
+Tổng thể kiến trúc cho thấy sự ưu tiên rõ ràng về tính xác định, khả năng kiểm chứng và độ tin cậy dữ liệu — ba tiêu chí cốt lõi để triển khai hệ thống LLM trong miền du lịch địa phương.
+
+---

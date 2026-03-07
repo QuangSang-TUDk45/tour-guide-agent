@@ -50,3 +50,11 @@
 [23] K. Valmeekam et al., “On the Planning Abilities of Large Language Models: A Critical Investigation,” trong *Advances in Neural Information Processing Systems (NeurIPS)*, 2023.
 
 [24] Q. Wu et al., “AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation,” *arXiv preprint arXiv:2308.08155*, 2023.
+
+[25] E. F. Codd, “A Relational Model of Data for Large Shared Data Banks,” *Communications of the ACM*, vol. 13, no. 6, pp. 377–387, 1970.
+
+[26] M. Stonebraker and L. A. Rowe, “The Design of POSTGRES,” trong *Proceedings of the 1986 ACM SIGMOD International Conference on Management of Data*, 1986, pp. 340–355.
+
+[27] G. Hohpe and B. Woolf, *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions*. Addison-Wesley, 2003.
+
+[28] W. G. J. Halfond, J. Viegas, and A. Orso, “A Classification of SQL-Injection Attacks and Countermeasures,” trong *Proceedings of the IEEE International Symposium on Secure Software Engineering*, 2006.
