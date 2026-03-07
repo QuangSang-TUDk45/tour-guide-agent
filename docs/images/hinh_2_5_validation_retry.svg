@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460">
+  <defs>
+    <style>
+      .title { font: 700 24px Arial; fill: #0f172a; }
+      .h { font: 700 15px Arial; fill: #1e293b; }
+      .t { font: 13px Arial; fill: #334155; }
+    </style>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="460" fill="#f8fafc"/>
+  <text x="34" y="40" class="title">Hình 2.5 - Luồng validation JSON và retry loop trong Orchestrator</text>
+
+  <rect x="40" y="80" width="1120" height="340" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+
+  <rect x="90" y="180" width="170" height="80" rx="10" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="140" y="212" class="h">User Prompt</text>
+  <text x="112" y="235" class="t">Input từ API/UI</text>
+
+  <rect x="320" y="160" width="220" height="120" rx="10" fill="#dcfce7" stroke="#4ade80"/>
+  <text x="376" y="192" class="h">get_route_json()</text>
+  <text x="350" y="215" class="t">LLM sinh JSON route</text>
+  <text x="350" y="238" class="t">theo prompt hệ thống</text>
+
+  <rect x="600" y="160" width="240" height="120" rx="10" fill="#fee2e2" stroke="#f87171"/>
+  <text x="658" y="192" class="h">Pydantic Validate</text>
+  <text x="630" y="215" class="t">OrchestratorOutput</text>
+  <text x="630" y="238" class="t">exactly-one-intent</text>
+
+  <polygon points="920,190 1040,220 920,250 800,220" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="900" y="224" class="h">Valid JSON?</text>
+
+  <rect x="850" y="110" width="220" height="60" rx="10" fill="#d1fae5" stroke="#34d399"/>
+  <text x="910" y="145" class="h">Return Route</text>
+
+  <rect x="850" y="290" width="250" height="80" rx="10" fill="#ffedd5" stroke="#fb923c"/>
+  <text x="888" y="323" class="h">Append error to prompt</text>
+  <text x="906" y="346" class="t">retry (max_retries=1)</text>
+
+  <line x1="260" y1="220" x2="320" y2="220" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="540" y1="220" x2="600" y2="220" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="840" y1="220" x2="800" y2="220" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+
+  <line x1="980" y1="190" x2="980" y2="170" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <text x="1000" y="182" class="t">Yes</text>
+
+  <line x1="980" y1="250" x2="980" y2="290" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <text x="1000" y="275" class="t">No</text>
+
+  <path d="M850,330 C700,330 520,340 430,280" fill="none" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+</svg>

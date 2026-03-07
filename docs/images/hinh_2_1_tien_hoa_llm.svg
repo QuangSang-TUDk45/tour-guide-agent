@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420">
+  <defs>
+    <style>
+      .title { font: 700 24px 'Arial'; fill: #0f172a; }
+      .label { font: 600 16px 'Arial'; fill: #0f172a; }
+      .text { font: 14px 'Arial'; fill: #334155; }
+      .small { font: 13px 'Arial'; fill: #475569; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569" />
+    </marker>
+  </defs>
+
+  <rect width="1200" height="420" fill="#f8fafc"/>
+  <text x="40" y="42" class="title">Hình 2.1 - Tiến hoá mô hình ngôn ngữ đến LLM ứng dụng trong hệ thống Multi-Agent</text>
+
+  <line x1="70" y1="210" x2="1130" y2="210" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g transform="translate(90,120)">
+    <rect width="190" height="170" rx="12" fill="#e2e8f0" stroke="#94a3b8"/>
+    <text x="20" y="35" class="label">n-gram</text>
+    <text x="20" y="62" class="text">• Dựa trên tần suất</text>
+    <text x="20" y="84" class="text">• Ngữ cảnh ngắn</text>
+    <text x="20" y="106" class="text">• Sparsity cao</text>
+    <text x="20" y="142" class="small">Giai đoạn nền tảng</text>
+  </g>
+
+  <g transform="translate(330,120)">
+    <rect width="190" height="170" rx="12" fill="#dbeafe" stroke="#60a5fa"/>
+    <text x="20" y="35" class="label">RNN / LSTM</text>
+    <text x="20" y="62" class="text">• Mô hình chuỗi</text>
+    <text x="20" y="84" class="text">• Có bộ nhớ ngắn hạn</text>
+    <text x="20" y="106" class="text">• Khó song song hoá</text>
+    <text x="20" y="142" class="small">Neural LM</text>
+  </g>
+
+  <g transform="translate(570,120)">
+    <rect width="190" height="170" rx="12" fill="#dcfce7" stroke="#4ade80"/>
+    <text x="20" y="35" class="label">Transformer</text>
+    <text x="20" y="62" class="text">• Self-attention</text>
+    <text x="20" y="84" class="text">• Multi-head attention</text>
+    <text x="20" y="106" class="text">• Huấn luyện quy mô lớn</text>
+    <text x="20" y="142" class="small">Bước ngoặt [6]</text>
+  </g>
+
+  <g transform="translate(810,120)">
+    <rect width="300" height="170" rx="12" fill="#fee2e2" stroke="#f87171"/>
+    <text x="20" y="35" class="label">Instruct LLM + Router API</text>
+    <text x="20" y="62" class="text">• Tuân thủ chỉ dẫn tốt hơn</text>
+    <text x="20" y="84" class="text">• Phù hợp structured output</text>
+    <text x="20" y="106" class="text">• Dễ triển khai không cần GPU local</text>
+    <text x="20" y="142" class="small">Áp dụng trong đề tài: Qwen2.5-7B-Instruct</text>
+  </g>
+</svg>

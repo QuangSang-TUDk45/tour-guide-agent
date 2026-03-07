@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <defs>
+    <style>
+      .title { font: 700 24px Arial; fill: #0f172a; }
+      .h { font: 700 16px Arial; fill: #1e293b; }
+      .t { font: 14px Arial; fill: #334155; }
+    </style>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="520" fill="#f8fafc"/>
+  <text x="36" y="42" class="title">Hình 2.2 - Khái niệm self-attention trong một khối Transformer</text>
+
+  <rect x="60" y="90" width="1080" height="380" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+
+  <rect x="110" y="170" width="170" height="60" rx="8" fill="#e2e8f0"/>
+  <text x="165" y="206" class="h">Token i</text>
+
+  <rect x="340" y="120" width="170" height="60" rx="8" fill="#dbeafe"/>
+  <text x="406" y="156" class="h">Q</text>
+
+  <rect x="340" y="200" width="170" height="60" rx="8" fill="#dcfce7"/>
+  <text x="406" y="236" class="h">K</text>
+
+  <rect x="340" y="280" width="170" height="60" rx="8" fill="#fee2e2"/>
+  <text x="406" y="316" class="h">V</text>
+
+  <line x1="280" y1="200" x2="340" y2="150" stroke="#475569" stroke-width="3" marker-end="url(#a)"/>
+  <line x1="280" y1="200" x2="340" y2="230" stroke="#475569" stroke-width="3" marker-end="url(#a)"/>
+  <line x1="280" y1="200" x2="340" y2="310" stroke="#475569" stroke-width="3" marker-end="url(#a)"/>
+
+  <rect x="590" y="180" width="240" height="110" rx="10" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="620" y="215" class="h">Attention Score</text>
+  <text x="620" y="240" class="t">softmax(QKᵀ / √d)</text>
+  <text x="620" y="265" class="t">→ trọng số theo ngữ cảnh</text>
+
+  <line x1="510" y1="150" x2="590" y2="200" stroke="#475569" stroke-width="3" marker-end="url(#a)"/>
+  <line x1="510" y1="230" x2="590" y2="230" stroke="#475569" stroke-width="3" marker-end="url(#a)"/>
+
+  <rect x="900" y="170" width="190" height="130" rx="10" fill="#ede9fe" stroke="#a78bfa"/>
+  <text x="930" y="205" class="h">Context Vector</text>
+  <text x="925" y="230" class="t">weighted sum(V)</text>
+  <text x="925" y="255" class="t">biểu diễn mới</text>
+
+  <line x1="830" y1="235" x2="900" y2="235" stroke="#475569" stroke-width="3" marker-end="url(#a)"/>
+
+  <text x="120" y="370" class="t">Multi-head attention: lặp khối attention trên nhiều "đầu" để học nhiều loại quan hệ ngôn ngữ.</text>
+  <text x="120" y="397" class="t">Positional encoding: bổ sung thông tin thứ tự token do self-attention không có tính tuần tự nội tại.</text>
+</svg>

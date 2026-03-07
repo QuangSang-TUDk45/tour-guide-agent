@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="520" viewBox="0 0 1400 520">
+  <style>
+    .title { font: 700 28px Arial, sans-serif; fill:#0B4F6C; }
+    .lane { fill:#F3F8FB; stroke:#0B4F6C; stroke-width:2; rx:14; ry:14; }
+    .box { fill:#E7F3FA; stroke:#0B4F6C; stroke-width:2; rx:10; ry:10; }
+    .txt { font: 600 16px Arial, sans-serif; fill:#0B4F6C; }
+    .small { font: 500 13px Arial, sans-serif; fill:#173B4D; }
+    .arrow { stroke:#0B4F6C; stroke-width:2; marker-end:url(#m); }
+  </style>
+  <defs>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#0B4F6C"/>
+    </marker>
+  </defs>
+
+  <text x="700" y="45" text-anchor="middle" class="title">Hình 5.1. Lộ trình phát triển hệ thống giai đoạn tiếp theo</text>
+
+  <rect x="60" y="90" width="1280" height="360" class="lane"/>
+
+  <rect x="100" y="160" width="220" height="160" class="box"/>
+  <text x="210" y="195" text-anchor="middle" class="txt">Giai đoạn 1</text>
+  <text x="210" y="220" text-anchor="middle" class="small">Semantic / Hybrid Retrieval</text>
+  <text x="210" y="245" text-anchor="middle" class="small">(Lexical + Embedding)</text>
+  <text x="210" y="270" text-anchor="middle" class="small">Tăng độ chính xác ngữ nghĩa</text>
+
+  <rect x="360" y="160" width="220" height="160" class="box"/>
+  <text x="470" y="195" text-anchor="middle" class="txt">Giai đoạn 2</text>
+  <text x="470" y="220" text-anchor="middle" class="small">Conversational Memory</text>
+  <text x="470" y="245" text-anchor="middle" class="small">Session + Context Continuity</text>
+  <text x="470" y="270" text-anchor="middle" class="small">Nâng trải nghiệm đa lượt</text>
+
+  <rect x="620" y="160" width="220" height="160" class="box"/>
+  <text x="730" y="195" text-anchor="middle" class="txt">Giai đoạn 3</text>
+  <text x="730" y="220" text-anchor="middle" class="small">Mở rộng Domain Dữ liệu</text>
+  <text x="730" y="245" text-anchor="middle" class="small">Di chuyển / sự kiện / vé</text>
+  <text x="730" y="270" text-anchor="middle" class="small">Tăng độ bao phủ nghiệp vụ</text>
+
+  <rect x="880" y="160" width="220" height="160" class="box"/>
+  <text x="990" y="195" text-anchor="middle" class="txt">Giai đoạn 4</text>
+  <text x="990" y="220" text-anchor="middle" class="small">Production Hardening</text>
+  <text x="990" y="245" text-anchor="middle" class="small">Docker + Monitoring + CI/CD</text>
+  <text x="990" y="270" text-anchor="middle" class="small">Đảm bảo vận hành ổn định</text>
+
+  <rect x="1140" y="160" width="160" height="160" class="box"/>
+  <text x="1220" y="195" text-anchor="middle" class="txt">Giai đoạn 5</text>
+  <text x="1220" y="220" text-anchor="middle" class="small">Chuẩn hoá</text>
+  <text x="1220" y="242" text-anchor="middle" class="small">địa chỉ hành chính</text>
+  <text x="1220" y="264" text-anchor="middle" class="small">bán tự động</text>
+
+  <line x1="320" y1="240" x2="355" y2="240" class="arrow"/>
+  <line x1="580" y1="240" x2="615" y2="240" class="arrow"/>
+  <line x1="840" y1="240" x2="875" y2="240" class="arrow"/>
+  <line x1="1100" y1="240" x2="1135" y2="240" class="arrow"/>
+
+  <text x="700" y="390" text-anchor="middle" class="small">Mục tiêu tổng thể: tăng độ chính xác tri thức, năng lực hội thoại và độ tin cậy triển khai thực tế</text>
+</svg>

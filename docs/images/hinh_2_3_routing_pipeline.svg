@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <defs>
+    <style>
+      .title { font: 700 24px Arial; fill: #0f172a; }
+      .h { font: 700 15px Arial; fill: #1e293b; }
+      .t { font: 13px Arial; fill: #334155; }
+    </style>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="520" fill="#f8fafc"/>
+  <text x="34" y="42" class="title">Hình 2.3 - Pipeline định tuyến JSON trong kiến trúc Multi-Agent</text>
+
+  <rect x="40" y="90" width="1120" height="390" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+
+  <rect x="90" y="180" width="150" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="117" y="220" class="h">User Prompt</text>
+
+  <rect x="300" y="150" width="210" height="130" rx="10" fill="#dcfce7" stroke="#4ade80"/>
+  <text x="340" y="185" class="h">Orchestrator Agent</text>
+  <text x="322" y="210" class="t">Intent classification</text>
+  <text x="322" y="232" class="t">Output: JSON routing</text>
+  <text x="322" y="254" class="t">(8 intents)</text>
+
+  <rect x="560" y="150" width="210" height="130" rx="10" fill="#fee2e2" stroke="#f87171"/>
+  <text x="607" y="185" class="h">Pydantic v2</text>
+  <text x="585" y="210" class="t">Schema validation</text>
+  <text x="585" y="232" class="t">exactly-one-intent</text>
+  <text x="585" y="254" class="t">retry if invalid JSON</text>
+
+  <rect x="820" y="120" width="290" height="190" rx="10" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="900" y="154" class="h">Tool Layer</text>
+  <text x="850" y="180" class="t">food / restaurant / destination</text>
+  <text x="850" y="202" class="t">hotel / service / weather</text>
+  <text x="850" y="224" class="t">PostgreSQL + API weather</text>
+  <text x="850" y="246" class="t">Top-K retrieval for context</text>
+
+  <rect x="300" y="340" width="220" height="90" rx="10" fill="#ede9fe" stroke="#a78bfa"/>
+  <text x="350" y="376" class="h">Response Agent</text>
+  <text x="332" y="400" class="t">Q&A / tra cứu thông tin</text>
+
+  <rect x="570" y="340" width="220" height="90" rx="10" fill="#ffedd5" stroke="#fb923c"/>
+  <text x="625" y="376" class="h">Planning Agent</text>
+  <text x="603" y="400" class="t">Lập lịch trình nhiều ngày</text>
+
+  <rect x="860" y="350" width="210" height="70" rx="10" fill="#d1fae5" stroke="#34d399"/>
+  <text x="915" y="390" class="h">Final Response</text>
+
+  <line x1="240" y1="215" x2="300" y2="215" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="510" y1="215" x2="560" y2="215" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="770" y1="215" x2="820" y2="215" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+
+  <line x1="900" y1="310" x2="420" y2="340" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="950" y1="310" x2="680" y2="340" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+
+  <line x1="520" y1="385" x2="860" y2="385" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+  <line x1="790" y1="385" x2="860" y2="385" stroke="#334155" stroke-width="3" marker-end="url(#ar)"/>
+</svg>

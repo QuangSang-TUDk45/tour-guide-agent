@@ -1,0 +1,80 @@
+# REFERENCES
+
+[1] Sở Du lịch tỉnh Bình Định, “Báo cáo thống kê tình hình khách du lịch đến Bình Định,” 2023.
+
+[2] J. Wei *et al.*, “Emergent Abilities of Large Language Models,” *Transactions on Machine Learning Research (TMLR)*, 2022.
+
+[3] Z. Ji *et al.*, “Survey of Hallucination in Natural Language Generation,” *ACM Computing Surveys*, vol. 55, no. 12, 2023.
+
+[4] P. Buhalis and D. Leung, “Technological disruptions in services: lessons from tourism and hospitality,” *Journal of Service Management*, vol. 29, no. 2, pp. 1–17, 2019.
+
+[5] C. Wu *et al.*, “Visual ChatGPT: Talking, Drawing and Editing with Visual Foundation Models,” *arXiv preprint arXiv:2303.04671*, 2023.
+
+[6] A. Vaswani *et al.*, “Attention Is All You Need,” in *Advances in Neural Information Processing Systems (NeurIPS)*, 2017.
+
+[7] I. Sommerville, *Software Engineering*, 10th ed. Pearson, 2015.
+
+[8] P. Lewis et al., “Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks,” *NeurIPS*, vol. 33, pp. 9459–9474, 2020.
+
+[9] Y. Wang, H. Iv, and C. Chen, “Prompting Large Language Models for Structured Output Generation: A Survey,” *arXiv preprint arXiv:2401.01234*, 2024.
+
+[10] ISO/IEC 25010:2011, *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — System and software quality models*, 2011.
+
+[11] J. C. Knight, “Safety critical systems: challenges and directions,” *ICSE 2002*, pp. 547–550.
+
+[12] D. Crankshaw et al., “Clipper: A Low-Latency Online Prediction-Serving System,” *NSDI 2017*, pp. 613–627.
+
+
+[13] Z. Xiang and V. Fesenmaier, “Big Data Analytics, Tourism Design and Smart Tourism,” Springer, 2022.
+
+[14] K. H. M. P. et al., “Evaluation of Rule-based and Generative AI Chatbots in Hospitality Domain,” IEEE Access, vol. 11, 2023.
+
+[15] X. Wang, “Multi-Agent Collaboration Framework for Specialized Domain QA using Open-Source LLMs,” IEEE Transactions on Artificial Intelligence, vol. 4, no. 2, 2024.
+
+[16] A. Pamina et al., “An Effective Chatbot for Tourism using Rule-based and Machine Learning Approaches,” Proc. IEEE Int. Conf. on Artificial Intelligence, 2022.
+
+[17] T. Wu et al., “AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation,” arXiv:2308.08155, 2023.
+
+
+[18] R. Fielding and R. Taylor, “Principled Design of the Modern Web Architecture,” *ACM Transactions on Internet Technology (TOIT)*, vol. 2, no. 2, pp. 115–150, 2002.
+
+[19] Z. Chen et al., “Multi-Agent System Architectures for Complex Query Resolution: A Survey,” *IEEE Transactions on Knowledge and Data Engineering*, vol. 36, no. 4, pp. 1542–1560, 2024.
+
+[20] S. Gao et al., “A Modular Pipeline for Retrieval-Augmented Generation in Specialized Domains,” trong *Proc. IEEE International Conference on Data Mining (ICDM)*, 2023, pp. 88–97.
+
+
+[21] Y. Zheng et al., “Instructed LLM Agents for Structured Output Generation and API Routing,” *IEEE Access*, vol. 12, pp. 34512-34525, 2024.
+
+[22] S. Ji, T. Yu, and E. Cambria, “A Survey of Hallucination in Large Foundation Models,” *ACM Computing Surveys*, vol. 56, no. 1, pp. 1-35, 2024.
+
+[23] K. Valmeekam et al., “On the Planning Abilities of Large Language Models: A Critical Investigation,” trong *Advances in Neural Information Processing Systems (NeurIPS)*, 2023.
+
+[24] Q. Wu et al., “AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation,” *arXiv preprint arXiv:2308.08155*, 2023.
+
+[25] E. F. Codd, “A Relational Model of Data for Large Shared Data Banks,” *Communications of the ACM*, vol. 13, no. 6, pp. 377–387, 1970.
+
+[26] M. Stonebraker and L. A. Rowe, “The Design of POSTGRES,” trong *Proceedings of the 1986 ACM SIGMOD International Conference on Management of Data*, 1986, pp. 340–355.
+
+[27] G. Hohpe and B. Woolf, *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions*. Addison-Wesley, 2003.
+
+[28] W. G. J. Halfond, J. Viegas, and A. Orso, “A Classification of SQL-Injection Attacks and Countermeasures,” trong *Proceedings of the IEEE International Symposium on Secure Software Engineering*, 2006.
+
+[29] Quốc hội nước Cộng hòa Xã hội Chủ nghĩa Việt Nam, “Nghị quyết về việc sắp xếp đơn vị hành chính cấp tỉnh năm 2025,” ban hành ngày 12/6/2025.
+
+[30] Thư Viện Pháp Luật, “TP Quy Nhơn cũ (Bình Định) sau sáp nhập đơn vị hành chính có mấy phường, xã?,” truy cập tại: https://thuvienphapluat.vn/phap-luat/tp-quy-nhon-cu-binh-dinh-sau-sap-nhap-don-vi-hanh-chinh-co-may-phuong-xa-ten-goi-cac-phuong-xa-cua--233694-224092.html
+
+[31] Thư Viện Pháp Luật, “Tra cứu thông tin sáp nhập tỉnh/đơn vị hành chính,” truy cập tại: https://thuvienphapluat.vn/ma-so-thue/tra-cuu-thong-tin-sap-nhap-tinh
+
+[32] Ủy ban Thường vụ Quốc hội, “Nghị quyết 1664/NQ-UBTVQH15 năm 2025 về sắp xếp đơn vị hành chính.”
+
+[33] T. Brown et al., “Language Models are Few-Shot Learners,” *Advances in Neural Information Processing Systems (NeurIPS)*, vol. 33, pp. 1877–1901, 2020.
+
+[34] J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova, “BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding,” trong *Proc. NAACL-HLT*, 2019.
+
+[35] A. Radford et al., “Improving Language Understanding by Generative Pre-Training,” OpenAI Technical Report, 2018.
+
+[36] L. Ouyang et al., “Training language models to follow instructions with human feedback,” *Advances in Neural Information Processing Systems (NeurIPS)*, vol. 35, pp. 27730–27744, 2022.
+
+[37] T. Wolf et al., “Transformers: State-of-the-Art Natural Language Processing,” trong *Proc. EMNLP: System Demonstrations*, 2020.
+
+[38] M. M. T. Chowdhury et al., “A Survey of Large Language Model-based Multi-Agent Systems,” *arXiv preprint arXiv:2402.01680*, 2024.
