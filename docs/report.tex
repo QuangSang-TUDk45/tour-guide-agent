@@ -1,0 +1,130 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[T5]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{svg}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{markdown}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  pdftitle={Bao cao khoa hoc - Quy Nhon Virtual Travel Assistant}
+}
+
+\title{Hệ Thống Trợ Lý Du Lịch Ảo Quy Nhơn\\Sử Dụng Kiến Trúc Multi-Agent và Mô Hình Ngôn Ngữ Lớn}
+\author{Nhóm nghiên cứu}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\clearpage
+
+% ====== Nguồn nội dung từ các file markdown trong thư mục docs ======
+\chapter*{Phần đầu báo cáo}
+\addcontentsline{toc}{chapter}{Phần đầu báo cáo}
+\markdownInput{PHAN_DAU_BAO_CAO.md}
+
+\chapter*{Phần mở đầu}
+\addcontentsline{toc}{chapter}{Phần mở đầu}
+\markdownInput{PHAN_MO_DAU.md}
+
+\chapter{Tổng quan về đề tài}
+\markdownInput{chuong-1.md}
+
+\chapter{Cơ sở lý thuyết}
+\markdownInput{chuong-2.md}
+
+\chapter{Phân tích và thiết kế hệ thống}
+\markdownInput{chuong-3.md}
+
+\chapter{Triển khai và đánh giá}
+\markdownInput{chuong-4.md}
+
+\chapter{Kết luận và hướng phát triển}
+\markdownInput{chuong-5.md}
+
+\chapter*{Phụ lục}
+\addcontentsline{toc}{chapter}{Phụ lục}
+\markdownInput{phu-luc.md}
+
+\chapter*{Tài liệu tham khảo}
+\addcontentsline{toc}{chapter}{Tài liệu tham khảo}
+\markdownInput{REFERENCES}
+
+% ====== Danh sách hình ảnh trong docs/images ======
+\chapter*{Phụ bản hình ảnh hệ thống}
+\addcontentsline{toc}{chapter}{Phụ bản hình ảnh hệ thống}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_2_1_tien_hoa_llm}
+  \caption{Tiến hóa mô hình ngôn ngữ lớn}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_2_2_transformer_attention}
+  \caption{Cơ chế Transformer và Attention}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_2_3_routing_pipeline}
+  \caption{Luồng routing pipeline trong hệ thống}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_2_4_web_data_architecture}
+  \caption{Kiến trúc dữ liệu web và tích hợp}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_2_5_validation_retry}
+  \caption{Validation và cơ chế retry}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_2_6_lexical_retrieval}
+  \caption{Lexical retrieval bằng so khớp chuỗi}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_3_1_luong_chuc_nang_uc}
+  \caption{Luồng chức năng use-case}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_3_2_kien_truc_tong_the}
+  \caption{Kiến trúc tổng thể hệ thống}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_3_3_thiet_ke_agents}
+  \caption{Thiết kế Multi-Agent}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=0.95\textwidth]{images/hinh_5_1_lo_trinh_phat_trien}
+  \caption{Lộ trình phát triển trong tương lai}
+\end{figure}
+
+\end{document}
