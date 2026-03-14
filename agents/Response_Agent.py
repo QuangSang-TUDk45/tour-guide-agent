@@ -32,20 +32,25 @@ def get_agent_response(user_prompt):
     Sends the user prompt and context to the LLM for general chat interaction.
     Suitable for Q&A, greetings, and simple travel recommendations.
     """
-    completion = client.chat.completions.create(
-        model="Qwen/Qwen2.5-7B-Instruct:together",
-        messages=[
-            {
-                "role": "system",
-                "content": system_prompt
-            },
-            {
-                "role": "user",
-                "content": user_prompt
-            }
-        ],
-    )
-    
-    # Extract and return the AI's response content
-    agent_response = completion.choices[0].message.content
+    try:
+        completion = client.chat.completions.create(
+            model="Qwen/Qwen2.5-7B-Instruct:together",
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_prompt
+                },
+                {
+                    "role": "user",
+                    "content": user_prompt
+                }
+            ],
+        )
+        
+        # Extract and return the AI's response content
+        agent_response = completion.choices[0].message.content
+        return agent_response
+    except Exception as e:
+        print(f"Error calling LLM: {e}")
+        return "Xin lỗi, có lỗi xảy ra khi xử lý yêu cầu của bạn. Vui lòng thử lại sau."
     return agent_response

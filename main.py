@@ -27,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/chat-planner", StaticFiles(directory="frontend/chat-planner", html=True), name="chat_planner")
+app.mount("/chat-planner", StaticFiles(directory="frontend", html=True), name="chat_planner")
 
 @app.get("/")
 def redirect_to_chat_planner():

@@ -93,21 +93,26 @@ def get_route_json(user_prompt):
     """
     Sends the user's prompt to the LLM and retrieves the raw content response.
     """
-    completion = client.chat.completions.create(
-        model="Qwen/Qwen2.5-7B-Instruct:together",
-        messages=[
-            {
-                "role": "system",
-                "content": system_prompt
-            },
-            {
-                "role": "user",
-                "content": user_prompt
-            }
-        ],
-    )
-    agent_response = completion.choices[0].message.content
-    return agent_response
+    try:
+        completion = client.chat.completions.create(
+            model="Qwen/Qwen2.5-7B-Instruct:together",
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_prompt
+                },
+                {
+                    "role": "user",
+                    "content": user_prompt
+                }
+            ],
+        )
+        agent_response = completion.choices[0].message.content
+        return agent_response
+    except Exception as e:
+        print(f"Error calling LLM: {e}")
+        # Fallback to general chat
+        return '{"chat": "general"}'
 
 def validate_route_json(agent_response, current_prompt):
     try:

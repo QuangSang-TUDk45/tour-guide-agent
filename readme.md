@@ -21,12 +21,16 @@ Key Features:
     - DB_PASS="PostgreSQL password here"
     - DB_URL = "postgresql://postgres:"""PostgreSQL password here"""@localhost:5432/BinhDinh_TourGuide"
     - data_path = "data\data_raw.xlsx"
-2. Run file create_database.py.
-3. Run file convert_excel_to_postgre.py.
-4. Open cmd and run command "uvicorn main:app --reload".
-5. Open cmd and run command "streamlit run app.py".
+3. Run file create_database.py.
+4. Run file convert_excel_to_postgre.py.
+5. Open cmd and run command "uvicorn main:app --reload --host 0.0.0.0 --port 8000".
+6. Open cmd and run command "streamlit run app.py".
 
 ## Chat Planner Frontend (mới)
 - Frontend mới nằm tại `frontend/chat-planner` và được FastAPI serve trực tiếp qua đường dẫn `/chat-planner`.
 - Sau khi chạy backend (`uvicorn main:app --reload`), bạn mở trình duyệt tại `http://localhost:8000/chat-planner` để dùng giao diện chat planner.
 - Root URL `http://localhost:8000/` sẽ tự động chuyển hướng sang trang chat planner.
+## Troubleshooting
+- Nếu gặp lỗi NumPy compatibility, đảm bảo đã cài đặt đúng phiên bản numpy==1.26.4
+- Nếu database connection fail, kiểm tra DB_URL trong file .env
+- Tools đã được tối ưu hóa với Vietnamese language support và advanced filtering

@@ -1,55 +1,60 @@
 # tools/get_destination.py
+"""
+Professional destination search tool with advanced filtering and matching
+"""
 
 import pandas as pd
-import difflib
+from sqlalchemy import text
+import sys
 import os
-from sqlalchemy import create_engine, text
-from dotenv import load_dotenv
 
-# Load environment variables from the .env file
-load_dotenv()
+# Add current directory to path for imports
+sys.path.append(os.path.dirname(__file__))
+from utils import safe_db_query, search_by_location, search_by_category, search_by_name, get_top_results
 
-# Retrieve the database connection URL and initialize the SQLAlchemy engine
-DB_URL = os.getenv("DB_URL")
-engine = create_engine(DB_URL)
-
-def get_destination(filter_tags: str) -> pd.DataFrame:
+def get_destination(
+    location: str = None,
+    category: str = None,
+    name: str = None,
+    limit: int = 10
+) -> pd.DataFrame:
     """
-    Fetches destination data from the database and returns the top 5 matches
-    based on the similarity between the user's filter tags and the destination's category.
+    Advanced destination search with multiple filter options
+
+    Args:
+        location: Location filter (e.g., "Quy Nhơn", "Phú Yên")
+        category: Category filter (e.g., "biển", "núi", "beach", "mountain")
+        name: Name filter for specific destination
+        limit: Maximum number of results to return
+
+    Returns:
+        DataFrame with destination information
     """
-    
-    # Define the SQL query to fetch necessary columns from the 'destination' table
-    query = text("SELECT name, category, address, description, gps_lat, gps_lon FROM destination")
-    
-    # Execute the query and load the result into a Pandas DataFrame
-    df_destination = pd.read_sql(query, engine)
 
-    # Handle the case where the database returns an empty result
-    if df_destination.empty:
-        return pd.DataFrame(columns=["name", "address", "description", "gps_lat", "gps_lon"])
+    # Query destination data
+    query = text("""
+        SELECT name, category, address, description,
+               CAST(gps_lat AS TEXT) as gps_lat,
+               CAST(gps_lon AS TEXT) as gps_lon
+        FROM destination
+    """)
 
-    # Normalize the input filter tags to lowercase for accurate comparison
-    filter_tags_lower = str(filter_tags).lower()
-    sim_scores_list = []
+    df = safe_db_query(query)
 
-    # Iterate through each category in the DataFrame to calculate similarity
-    for tag in df_destination["category"]:
-        # Normalize the database category tag to lowercase
-        tag_lower = str(tag).lower()
+    if df.empty:
+        return pd.DataFrame(columns=["name", "category", "address", "description", "gps_lat", "gps_lon"])
 
-        # Calculate the string similarity score (returns a float between 0.0 and 1.0)
-        score = difflib.SequenceMatcher(None, filter_tags_lower, tag_lower).ratio()
+    # Apply filters in sequence
+    if name:
+        df = search_by_name(df, name)
 
-        # Convert the float score to a percentage format with 2 decimals (e.g., 90.50)
-        score_percentage = round(score * 100, 2)
-        sim_scores_list.append(score_percentage)
+    if category:
+        df = search_by_category(df, category)
 
-    # Append the calculated similarity scores as a new column in the DataFrame
-    df_destination["sim_score"] = sim_scores_list
+    if location:
+        df = search_by_location(df, location)
 
-    # Extract the top 5 records with the highest similarity scores
-    df_result = df_destination.nlargest(10, 'sim_score').copy()
+    # Get top results
+    df = get_top_results(df, limit)
 
-    # Return only the specified columns for the final output
-    return df_result[["name", "address", "description", "gps_lat", "gps_lon"]]
+    return df[["name", "category", "address", "description", "gps_lat", "gps_lon"]]

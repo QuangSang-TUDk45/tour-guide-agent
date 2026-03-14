@@ -1,56 +1,58 @@
 # tools/get_restaurant.py
+"""
+Professional restaurant search tool with advanced filtering and matching
+"""
+
 import pandas as pd
-import difflib
+from sqlalchemy import text
+import sys
 import os
-from sqlalchemy import create_engine, text
-from dotenv import load_dotenv
 
-# Load environment variables from the .env file
-load_dotenv()
+# Add current directory to path for imports
+sys.path.append(os.path.dirname(__file__))
+from utils import safe_db_query, search_by_location, search_by_category, search_by_name, get_top_results
 
-# Retrieve the database connection URL from environment variables
-DB_URL = os.getenv("DB_URL")
-
-# Initialize the SQLAlchemy engine for PostgreSQL connection
-engine = create_engine(DB_URL)
-
-def get_restaurant(filter_tags: str) -> pd.DataFrame:
+def get_restaurant(
+    location: str = None,
+    category: str = None,
+    name: str = None,
+    limit: int = 10
+) -> pd.DataFrame:
     """
-    Fetches restaurant data from the database and returns the top 10 matches
-    based on the similarity between the user's filter tags and the restaurant's category.
+    Advanced restaurant search with multiple filter options
+
+    Args:
+        location: Location filter (e.g., "Quy Nhơn", "Phú Yên")
+        category: Category filter (e.g., "hải sản", "Việt Nam", "seafood", "Vietnamese")
+        name: Name filter for specific restaurant
+        limit: Maximum number of results to return
+
+    Returns:
+        DataFrame with restaurant information
     """
-    
-    # Define the SQL query to fetch necessary columns from the 'restaurant' table
-    query = text("SELECT name, address, category, description FROM restaurant")
-    
-    # Execute the query and load the result into a Pandas DataFrame
-    df_restaurant = pd.read_sql(query, engine)
 
-    # Handle the case where the database returns an empty result
-    if df_restaurant.empty:
-        return pd.DataFrame(columns=["name", "address", "description"])
+    # Query restaurant data
+    query = text("""
+        SELECT name, address, category, description
+        FROM restaurant
+    """)
 
-    # Normalize the input filter tags to lowercase for accurate comparison
-    filter_tags_lower = str(filter_tags).lower()
-    sim_scores_list = []
+    df = safe_db_query(query)
 
-    # Iterate through each category in the DataFrame to calculate similarity
-    for tag in df_restaurant["category"]:
-        # Normalize the database category tag to lowercase
-        tag_lower = str(tag).lower()
+    if df.empty:
+        return pd.DataFrame(columns=["name", "address", "category", "description"])
 
-        # Calculate the string similarity score (returns a float between 0.0 and 1.0)
-        score = difflib.SequenceMatcher(None, filter_tags_lower, tag_lower).ratio()
+    # Apply filters in sequence
+    if name:
+        df = search_by_name(df, name)
 
-        # Convert the float score to a percentage format with 2 decimals (e.g., 85.50)
-        score_percentage = round(score * 100, 2)
-        sim_scores_list.append(score_percentage)
+    if category:
+        df = search_by_category(df, category)
 
-    # Append the calculated similarity scores as a new column in the DataFrame
-    df_restaurant["sim_score"] = sim_scores_list
-    
-    # Extract the top 10 records with the highest similarity scores
-    df_result = df_restaurant.nlargest(10, 'sim_score').copy()
+    if location:
+        df = search_by_location(df, location)
 
-    # Return only the specified columns for the final output
-    return df_result[["name", "address", "description"]]
+    # Get top results
+    df = get_top_results(df, limit)
+
+    return df[["name", "address", "category", "description"]]

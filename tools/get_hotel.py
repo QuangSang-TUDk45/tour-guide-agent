@@ -1,105 +1,70 @@
 # tools/get_hotel.py
+"""
+Professional hotel search tool with advanced price filtering and location matching
+"""
 
 import pandas as pd
+from sqlalchemy import text
+import sys
 import os
-from sqlalchemy import create_engine, text
-from dotenv import load_dotenv
 
-load_dotenv()
+# Add current directory to path for imports
+sys.path.append(os.path.dirname(__file__))
+from utils import safe_db_query, search_by_location, extract_price_numeric, filter_by_price, get_top_results
 
-DB_URL = os.getenv("DB_URL")
-engine = create_engine(DB_URL)
+def get_hotel(
+    location: str = None,
+    price_condition: str = None,
+    name: str = None,
+    limit: int = 10
+) -> pd.DataFrame:
+    """
+    Advanced hotel search with multiple filter options
 
+    Args:
+        location: Location filter (e.g., "Quy Nhơn", "Phú Yên")
+        price_condition: Price filter (e.g., "dưới 1 triệu", "trên 500k", "từ 1-2 triệu")
+        name: Name filter for specific hotel
+        limit: Maximum number of results to return
 
-# ===============================
-# HÀM TÁCH GIÁ TỪ TEXT
-# ===============================
-def extract_min_price(price_text):
-    try:
-        if pd.isna(price_text):
-            return None
+    Returns:
+        DataFrame with hotel information
+    """
 
-        # bỏ dấu chấm (900.000 → 900000)
-        clean_text = str(price_text).replace(".", "")
+    # Query hotel data - using correct column names
+    query = text("""
+        SELECT name, address, description, price_mean, gps_lat, gps_lon
+        FROM hotel
+    """)
 
-        # tách theo dấu -
-        parts = clean_text.split("-")
+    df = safe_db_query(query)
 
-        # lấy phần giá thấp nhất
-        min_price = parts[0].strip()
+    if df.empty:
+        return pd.DataFrame(columns=["name", "address", "description", "price_mean", "gps_lat", "gps_lon"])
 
-        return float(min_price)
+    # Rename price_mean to price for consistency
+    df = df.rename(columns={"price_mean": "price"})
 
-    except:
-        return None
+    # Add numeric price column for filtering
+    df["price_numeric"] = df["price"].apply(extract_price_numeric)
 
+    # Apply filters in sequence
+    if name:
+        # Simple name matching
+        name_lower = str(name).lower()
+        df = df[df["name"].str.lower().str.contains(name_lower, na=False)]
 
-# ===============================
-# HOTEL TOOL (ĐỘC LẬP)
-# ===============================
-def get_hotel(location=None, max_price=None) -> pd.DataFrame:
-
-    # ===============================
-    # QUERY HOTEL
-    # ===============================
     if location:
-        query = text("""
-            SELECT name, address, price_mean
-            FROM hotel
-            WHERE address ILIKE :loc
-        """)
-        df_hotel = pd.read_sql(
-            query,
-            engine,
-            params={"loc": f"%{location}%"}
-        )
-    else:
-        query = text("""
-            SELECT name, address, price_mean
-            FROM hotel
-        """)
-        df_hotel = pd.read_sql(query, engine)
+        df = search_by_location(df, location)
 
-    if df_hotel.empty:
-        return pd.DataFrame(columns=["name", "address", "price_mean"])
+    if price_condition:
+        df = filter_by_price(df, price_condition)
 
-    # ===============================
-    # PARSE GIÁ
-    # ===============================
-    df_hotel["price_numeric"] = df_hotel["price_mean"].apply(extract_min_price)
+    # No rating column in database, skip rating filter
+    # Sort by price (lowest first) since no rating available
+    df = df.sort_values("price_numeric", ascending=True, na_position='last')
 
-    # ===============================
-    # FILTER THEO MAX_PRICE
-    # ===============================
-    if max_price is not None:
-        try:
-            max_price = float(max_price)
-        except:
-            max_price = None
+    # Get top results
+    df = get_top_results(df, limit)
 
-        if max_price is not None:
-
-            df_filtered = df_hotel[
-                df_hotel["price_numeric"] <= max_price
-            ]
-
-            if not df_filtered.empty:
-                df_hotel = df_filtered
-            else:
-                # Không có hotel đúng giá → gợi ý gần nhất
-                df_hotel["price_diff"] = abs(
-                    df_hotel["price_numeric"] - max_price
-                )
-                df_hotel = df_hotel.sort_values("price_diff")
-
-    # ===============================
-    # SORT THEO GIÁ
-    # ===============================
-    df_hotel = df_hotel.sort_values("price_numeric")
-
-    # ===============================
-    # RETURN TOP 5
-    # ===============================
-    return df_hotel.head(5)[
-        ["name", "address", "price_mean"]
-    ]
+    return df[["name", "address", "description", "price", "gps_lat", "gps_lon"]]

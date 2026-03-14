@@ -1,71 +1,67 @@
 # tools/get_food.py
+"""
+Professional food search tool with advanced filtering and matching
+"""
+
 import pandas as pd
-import difflib
+from sqlalchemy import text
+import sys
 import os
-import unicodedata
-from sqlalchemy import create_engine, text
-from dotenv import load_dotenv
 
-# Load environment variables from the .env file
-load_dotenv()
+# Add current directory to path for imports
+sys.path.append(os.path.dirname(__file__))
+from utils import safe_db_query, search_by_category, search_by_name, get_top_results
 
-# Retrieve the database connection URL and initialize the SQLAlchemy engine
-DB_URL = os.getenv("DB_URL")
-engine = create_engine(DB_URL)
+def get_food(
+    category: str = None,
+    tags: str = None,
+    name: str = None,
+    limit: int = 10
+) -> pd.DataFrame:
+    """
+    Advanced food search with multiple filter options
 
+    Args:
+        category: Food category filter (e.g., "món chính", "hải sản", "main dish", "seafood")
+        tags: Tags filter for specific food characteristics
+        name: Name filter for specific food item
+        limit: Maximum number of results to return
+
+    Returns:
+        DataFrame with food information
+    """
+
+    # Query food data
+    query = text("""
+        SELECT name, category, tags, description
+        FROM food
+    """)
+
+    df = safe_db_query(query)
+
+    if df.empty:
+        return pd.DataFrame(columns=["name", "category", "tags", "description"])
+
+    # Apply filters in sequence
+    if name:
+        df = search_by_name(df, name)
+
+    if category:
+        df = search_by_category(df, category)
+
+    if tags:
+        # Search in tags column
+        tags_lower = str(tags).lower()
+        df = df[df["tags"].str.lower().str.contains(tags_lower, na=False)]
+
+    # Get top results
+    df = get_top_results(df, limit)
+
+    return df[["name", "category", "tags", "description"]]
+
+# Backward compatibility function
 def get_food_list(type_of_food: str, filter_tags: str) -> pd.DataFrame:
     """
-    Fetches food data from the database, filters it by food category, 
-    and returns the top 5 matches based on the similarity of the tags.
+    Legacy function for backward compatibility
     """
-    
-    # Define a list of valid food categories (in Vietnamese)
-    allowed_types = ["món chính", "món phụ", "đồ ăn vặt", "đồ tráng miệng", "đồ uống"]
-
-    # Clean the input food type (lowercase and strip whitespace) to ensure accurate validation
-    clean_type = str(type_of_food).lower().strip()
-    if clean_type not in allowed_types:
-        clean_type = None
-
-    # Construct and execute the SQL query based on whether a valid category was provided
-    if clean_type is not None:
-        # Parameterized query to fetch data for a specific food category (prevents SQL injection)
-        query = text("""
-            SELECT name, tags, description 
-            FROM food 
-            WHERE LOWER(category) = :category
-        """)
-        # Load the query result into a Pandas DataFrame
-        df_filtered = pd.read_sql(query, engine, params={"category": clean_type})
-    else:
-        # Fallback query to fetch all food items if the category is invalid or not provided
-        query = text("SELECT name, tags, description FROM food")
-        df_filtered = pd.read_sql(query, engine)
-
-    # Handle the case where the database returns an empty result
-    if df_filtered.empty:
-        return pd.DataFrame(columns=["name", "description"])
-
-    # Normalize the user's filter tags to lowercase for accurate string comparison
-    filter_tags_lower = str(filter_tags).lower()
-    sim_scores_list = []
-
-    # Iterate through the 'tags' column to calculate similarity scores
-    for tag in df_filtered["tags"]: 
-        tag_lower = str(tag).lower()
-
-        # Calculate the string similarity score (returns a float between 0.0 and 1.0)
-        score = difflib.SequenceMatcher(None, filter_tags_lower, tag_lower).ratio()
-
-        # Convert the float score to a percentage format with 2 decimals
-        score_percentage = round(score * 100, 2)
-        sim_scores_list.append(score_percentage)
-
-    # Append the calculated similarity scores as a new column in the DataFrame
-    df_filtered["sim_score"] = sim_scores_list
-    
-    # Extract the top 5 records with the highest similarity scores
-    df_result = df_filtered.nlargest(5, 'sim_score').copy()
-
-    # Return only the 'name' and 'description' columns for the final output
-    return df_result[["name", "description"]]
+    return get_food(category=type_of_food, tags=filter_tags, limit=5)

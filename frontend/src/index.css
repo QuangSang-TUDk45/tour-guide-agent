@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Travel-themed colors */
+    --background: 210 40% 98%;
+    --foreground: 217 33% 17%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 217 33% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 217 33% 17%;
+
+    /* Ocean blue primary */
+    --primary: 203 89% 53%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 203 89% 70%;
+    --primary-dark: 203 89% 35%;
+
+    /* Warm sunset secondary */
+    --secondary: 24 95% 64%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 217 19% 55%;
+
+    /* Tropical accent */
+    --accent: 158 64% 52%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 203 89% 53%;
+
+    --radius: 0.75rem;
+
+    /* Custom gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(203 89% 53%) 0%, hsl(193 82% 45%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(24 95% 64%) 0%, hsl(14 91% 58%) 100%);
+    --gradient-tropical: linear-gradient(135deg, hsl(158 64% 52%) 0%, hsl(172 66% 50%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(203 89% 53%) 0%, hsl(158 64% 52%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(203 89% 53% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(203 89% 53% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(203 89% 53% / 0.15);
+    --shadow-xl: 0 20px 25px -5px hsl(203 89% 53% / 0.2);
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 217 33% 17%;
+    --sidebar-primary: 203 89% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 217 33% 17%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 203 89% 53%;
+  }
+
+  .dark {
+    --background: 217 33% 12%;
+    --foreground: 210 40% 98%;
+
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 203 89% 53%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 203 89% 70%;
+    --primary-dark: 203 89% 35%;
+
+    --secondary: 24 95% 64%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 217 33% 22%;
+    --muted-foreground: 217 19% 65%;
+
+    --accent: 158 64% 52%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 203 89% 53%;
+    
+    --sidebar-background: 217 33% 15%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 203 89% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 22%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 22%;
+    --sidebar-ring: 203 89% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .gradient-ocean {
+    background: var(--gradient-ocean);
+  }
+
+  .gradient-sunset {
+    background: var(--gradient-sunset);
+  }
+
+  .gradient-tropical {
+    background: var(--gradient-tropical);
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-card-hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
