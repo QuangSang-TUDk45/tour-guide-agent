@@ -11,10 +11,27 @@ from tools.get_service import get_service
 import json
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 # Initialize the FastAPI application
 app = FastAPI(title="Quy Nhon AI Tour Guide API", description="API cho trợ lý du lịch ảo")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/chat-planner", StaticFiles(directory="frontend/chat-planner", html=True), name="chat_planner")
+
+@app.get("/")
+def redirect_to_chat_planner():
+    return RedirectResponse(url="/chat-planner")
 
 class ChatRequest(BaseModel):
     user_prompt: str

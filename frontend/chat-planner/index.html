@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Planner | Quy Nhơn Tour Guide</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app__header">
+      <h1>🏝️ Chat Planner</h1>
+      <p>Lên kế hoạch du lịch Quy Nhơn với AI Tour Guide</p>
+    </header>
+
+    <section id="chatWindow" class="chat-window" aria-live="polite"></section>
+
+    <form id="chatForm" class="chat-form">
+      <textarea
+        id="messageInput"
+        rows="2"
+        placeholder="Ví dụ: Lên lịch trình 3 ngày 2 đêm ngân sách 6 triệu"
+        required
+      ></textarea>
+      <button type="submit" id="sendBtn">Gửi</button>
+    </form>
+
+    <p class="hint">Backend: <code>/api/chat</code> • Frontend: <code>/chat-planner</code></p>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>

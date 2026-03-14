@@ -25,3 +25,8 @@ Key Features:
 3. Run file convert_excel_to_postgre.py.
 4. Open cmd and run command "uvicorn main:app --reload".
 5. Open cmd and run command "streamlit run app.py".
+
+## Chat Planner Frontend (mới)
+- Frontend mới nằm tại `frontend/chat-planner` và được FastAPI serve trực tiếp qua đường dẫn `/chat-planner`.
+- Sau khi chạy backend (`uvicorn main:app --reload`), bạn mở trình duyệt tại `http://localhost:8000/chat-planner` để dùng giao diện chat planner.
+- Root URL `http://localhost:8000/` sẽ tự động chuyển hướng sang trang chat planner.
